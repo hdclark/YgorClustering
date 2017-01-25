@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-BUILDDIR="/home/hal/Builds/DICOMautomaton/"
+BUILDDIR="/home/hal/Builds/YgorClustering/"
 BUILTPKGSDIR="/home/hal/Builds/"
 
 mkdir -p "${BUILDDIR}"
