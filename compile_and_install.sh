@@ -15,7 +15,7 @@ shopt -s nocasematch
 
 
 # The temporary location in which to build.
-#BUILDROOT="/home/hal/Builds/ygor_clustering/"
+#BUILDROOT="/home/hal/Builds/YgorClustering/"
 BUILDROOT="/tmp/ygor_clustering_build"
 #BUILDROOT="build"
 
@@ -45,7 +45,7 @@ while getopts "b:d:nch" opt; do
         printf "\n"
         printf " -d <arg> : The distribution/environment to assume for building.\n"
         printf "          : This option controls how the build is controlled, packaged, and installed.\n"
-        printf "          : Options are 'auto' (i.e., automatic detection), 'arch' and 'generic'.\n"
+        printf "          : Options are 'auto' (i.e., automatic detection), 'debian', 'arch', and 'generic'.\n"
         printf "          : Default: '%s'\n" "${DISTRIBUTION}"
         printf "\n"
         printf " -n       : No-install; build, but do not install.\n"
@@ -123,15 +123,38 @@ if [[ "${CLEANBUILD}" =~ ^y.* ]] ; then
     $SUDO find "${BUILDROOT}/" -type f -exec chmod 644 '{}' \+
     $SUDO find "${BUILDROOT}/" -type d -exec chmod 755 '{}' \+
     $SUDO find "${BUILDROOT}/" -exec chown "$( id -n -u ):$( id -n -g )" '{}' \+
-    rsync -rptz --delete --no-links --exclude="${BUILDROOT}" --cvs-exclude ./ "${BUILDROOT}/"
+    rsync -rpt --delete --no-links --exclude="${BUILDROOT}" --cvs-exclude ./ "${BUILDROOT}/"
 else
-    rsync -rptz          --no-links --exclude="${BUILDROOT}" --cvs-exclude ./ "${BUILDROOT}/"
+    rsync -rpt          --no-links --exclude="${BUILDROOT}" --cvs-exclude ./ "${BUILDROOT}/"
 fi
 cd "${BUILDROOT}"
 
 
 # Perform the build (+ optional install) for each distribution type.
-if [[ "${DISTRIBUTION}" =~ .*arch.* ]] ; then
+if [[ "${DISTRIBUTION}" =~ .*debian.* ]] ; then
+    printf 'Compiling for Debian...\n'
+
+    mkdir -p build
+    cd build
+
+    if [ -f CMakeCache.txt ] ; then
+        touch CMakeCache.txt  # To bump CMake-defined compilation time.
+    else
+        cmake \
+          -DCMAKE_INSTALL_PREFIX=/usr \
+          -DCMAKE_BUILD_TYPE=Release \
+          ../
+    fi
+    JOBS=$(nproc)
+    JOBS=$(( $JOBS < 8 ? $JOBS : 8 )) # Limit to reduce memory use.
+    make -j "$JOBS" VERBOSE=1
+    make package
+
+    if [[ "${ALSOINSTALL}" =~ ^y.* ]] ; then
+        $SUDO apt-get --yes install -f ./*deb
+    fi
+
+elif [[ "${DISTRIBUTION}" =~ .*arch.* ]] ; then
     printf 'Compiling for Arch Linux...\n'
 
     # Arch's makepkg is picky, disallowing being run as root, but also requiring the non-root user to be a sudoer. What
@@ -159,8 +182,18 @@ else  # Generic build and install.
     printf 'Compiling for generic Linux distribution...\n'
     printf 'Warning! Bypassing system package management and installing directly!\n'
 
+    mkdir -p build
+    cd build
+    cmake \
+      -DCMAKE_INSTALL_PREFIX=/usr \
+      -DCMAKE_BUILD_TYPE=Release \
+      ../
+    JOBS=$(nproc)
+    JOBS=$(( $JOBS < 8 ? $JOBS : 8 )) # Limit to reduce memory use.
+    make -j "$JOBS" VERBOSE=1
+
     if [[ "${ALSOINSTALL}" =~ ^y.* ]] ; then
-        $SUDO install -Dm644 src/*hpp /usr/include/
+        $SUDO make install
     fi
 
 fi

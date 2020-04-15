@@ -11,23 +11,39 @@ url="http://www.halclark.ca"
 arch=('x86_64' 'i686' 'armv7h')
 license=('GPLv3+')
 depends=(
-   'boost-libs' # Boost.geometry specifically (which is header-only).
+   'boost' # Boost.geometry specifically (which is header-only).
+)
+makedepends=(
+   'cmake'
+   'boost'
+)
+optdepends=(
+   'boost' # User build header-only AND/OR library optional dependency.
 )
 # conflicts=()
 # replaces=()
 # backup=()
 # install='foo.install'
-source=("git+https://gitlab.com/hdeanclark/YgorClustering.git")
-md5sums=('SKIP')
-sha1sums=('SKIP')
+#source=("git+https://gitlab.com/hdeanclark/YgorClustering.git")
+#md5sums=('SKIP')
+#sha1sums=('SKIP')
 
-#build() {
-#  # Nothing to build...
-#}
+#options=(!strip staticlibs)
+options=(strip staticlibs)
+#PKGEXT='.pkg.tar' # Disable compression.
+
+build() {
+  # Nothing to build here, just prepping for install.
+  #cmake "${pkgdir}" ...
+  cmake \
+    ../ \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release 
+  make VERBOSE=1
+}
 
 package() {
-  mkdir -p "${pkgdir}"/usr/include/
-  install -Dm644 "${srcdir}/YgorClustering/src/"*hpp "${pkgdir}"/usr/include/
+  make DESTDIR="${pkgdir}" install
 }
 
 # vim:set ts=2 sw=2 et:
