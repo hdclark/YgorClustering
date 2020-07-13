@@ -1,0 +1,26 @@
+# This config file facilitates automated static analysis on lgtm.com.
+extraction:
+  cpp:
+    prepare:
+      packages:
+      # Explicitly install known packages.
+      - "git"
+      - "cmake"
+      - "make"
+      - "g++"
+      - "rsync"
+      - "wget"
+      - "ca-certificates"
+    after_prepare:
+    # Create an accessible installation root directory.
+    - "cd $LGTM_WORKSPACE"
+    - "mkdir -pv placeholder_root/{include,lib,bin,share}"
+    # Install YgorClustering headers to an accessible and user-writeable directory.
+    - "cd $LGTM_WORKSPACE"
+    - "mkdir -pv ygorclustering"
+    - "cd ygorclustering"
+    - "git clone https://github.com/hdclark/ygorclustering ."
+    - "CXXFLAGS=-I$LGTM_WORKSPACE/placeholder_root/include LDFLAGS=-L$LGTM_WORKSPACE/placeholder_root/lib ./compile_and_install.sh -u -i $LGTM_WORKSPACE/placeholder_root -b build"
+    index:
+      # Compile the examples to provide an analysis entrypoint.
+      build_command: "cd examples/ && CPLUS_INCLUDE_PATH=$LGTM_WORKSPACE/placeholder_root/include ./compile.sh"
