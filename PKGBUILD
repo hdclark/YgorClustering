@@ -1,6 +1,6 @@
 # Maintainer: Hal Clark <gmail.com[at]hdeanclark>
 pkgname=ygorclustering
-pkgver=20170125_125726
+pkgver=20200713_103826
 pkgver() {
   date +%Y%m%d_%H%M%S
 }
@@ -33,12 +33,15 @@ options=(strip staticlibs)
 #PKGEXT='.pkg.tar' # Disable compression.
 
 build() {
+  # ---------------- Configure -------------------
+  # Try use environment variable, but fallback to standard. 
+  install_prefix=${INSTALL_PREFIX:-/usr}
+
   # Nothing to build here, just prepping for install.
-  #cmake "${pkgdir}" ...
   cmake \
-    ../ \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_BUILD_TYPE=Release 
+    -DCMAKE_INSTALL_PREFIX="${install_prefix}" \
+    -DCMAKE_BUILD_TYPE=Release  \
+    ../
   make VERBOSE=1
 }
 
