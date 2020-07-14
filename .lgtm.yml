@@ -1,10 +1,11 @@
+
 # This config file facilitates automated static analysis on lgtm.com.
 path_classifiers:
   test:
     - exclude: /
     - "src/*hpp"
     - "examples/*cc"
-
+    
 extraction:
   cpp:
     prepare:
@@ -15,18 +16,12 @@ extraction:
       - "make"
       - "g++"
       - "rsync"
-      - "wget"
-      - "ca-certificates"
     after_prepare:
     # Create an accessible installation root directory.
-    - "cd $LGTM_WORKSPACE"
-    - "mkdir -pv placeholder_root/{include,lib,bin,share}"
-    # Install YgorClustering headers to an accessible and user-writeable directory.
-    - "cd $LGTM_WORKSPACE"
-    - "mkdir -pv ygorclustering"
-    - "cd ygorclustering"
-    - "git clone https://github.com/hdclark/ygorclustering ."
-    - "CXXFLAGS=-I$LGTM_WORKSPACE/placeholder_root/include LDFLAGS=-L$LGTM_WORKSPACE/placeholder_root/lib ./compile_and_install.sh -u -i $LGTM_WORKSPACE/placeholder_root -b build"
+    - "mkdir -pv $LGTM_WORKSPACE/placeholder_root/{include,lib,bin,share}"
+    # Test installation script by Installing headers to an accessible and user-writeable directory.
+    - "cd $LGTM_SRC"
+    - "./compile_and_install.sh -u -i $LGTM_WORKSPACE/placeholder_root -b build"
     index:
       # Compile the examples to provide an analysis entrypoint.
-      build_command: "cd examples/ && CPLUS_INCLUDE_PATH=$LGTM_WORKSPACE/placeholder_root/include ./compile.sh"
+      build_command: "cd examples/ && CPLUS_INCLUDE_PATH=$LGTM_SRC/src ./compile.sh"      
