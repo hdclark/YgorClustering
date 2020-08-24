@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 
 g++ -std=c++17 Example1.cc -o example1 
