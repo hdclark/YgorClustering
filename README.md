@@ -1,8 +1,9 @@
 
-About
-=====
+[![Latest Release DOI](https://zenodo.org/badge/89645920.svg)](https://zenodo.org/badge/latestdoi/89645920)
 
-This is a C++ library for clustering data. It uses Boost.Geometry R*-trees for
+## About
+
+This is a C++ library for clustering data. It uses Boost.Geometry R\*-trees for
 fast indexing. The DBSCAN implementation can cluster 20 million 2D datum in
 around an hour, and 20 thousand in seconds.
 
@@ -15,15 +16,13 @@ unable to cluster concave clusters).
 Other clustering techniques are planned.
 
 
-Dependencies
-============
+## Dependencies
 
 This library requires Boost.Geometry (also header only) version >= 1.57.0.
 Earlier versions will most likely still work but have not been tested.
 
 
-Installation
-============
+## Installation
 
 This library is header-only.
 - It does not need to be linked.
@@ -34,12 +33,11 @@ A helper script can be used to build a package for Arch Linux or install
 directly (all other distributions).
 
 
-License and Copying
-===================
+## License and Copying
 
 All materials herein which may be copywrited, where applicable, are. Copyright
-2015, 2017 hal clark. See the LICENSE file for details about the license.
-Informally, YgorClustering is available under a GPLv3+ license.
+2015, 2017, 2018, 2019, 2020 hal clark. See the LICENSE file for details about
+the license. Informally, YgorClustering is available under a GPLv3+ license.
 
 All liability is herefore disclaimed. The person(s) who use this source and/or
 software do so strictly under their own volition. They assume all associated
