@@ -72,7 +72,7 @@ set(CPACK_GENERATOR "DEB")
 STRING(TIMESTAMP INVOCATION_TIMESTAMP "%Y%m%d.%H%M%S") # For a time-based version number.
 SET(CPACK_PACKAGE_VERSION "${INVOCATION_TIMESTAMP}")
 
-SET(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "amd64") # i386, amd64, armel, armhf, ...
+#SET(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "amd64") # i386, amd64, armel, armhf, ...
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "C++ header-only library for data clustering.")
 SET(CPACK_PACKAGE_CONTACT "hdeanclark@gmail.com")
 SET(CPACK_PACKAGE_MAINTAINER "Haley Clark <hdeanclark@gmail.com>")
