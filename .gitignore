@@ -1,0 +1,18 @@
+
+
+build
+doctest
+
+*.swp
+
+# Compiled Object files
+*.lo
+*.o
+
+# Compiled Dynamic libraries
+*.so
+
+# Compiled Static libraries
+*.la
+*.a
+
