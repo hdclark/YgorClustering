@@ -1,4 +1,6 @@
 
+// Example4.cc -- clusters files based on modification time.
+
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -25,61 +27,18 @@
 #include "YgorClustering.hpp"
 //#include "YgorClusteringDatumCommonInstantiations.hpp"
 
-/*
-namespace bt = boost::posix_time;
-const auto formats = std::make_tuple(
-    std::locale(std::locale::classic(), new bt::time_input_facet("%Y%m%d-%H%M%S")),
-    std::locale(std::locale::classic(), new bt::time_input_facet("%Y%m%d_%H%M%S")),
-    std::locale(std::locale::classic(), new bt::time_input_facet("%Y%m%dT%H%M%S")),
 
+int main(int argc, char* argv[]){
 
-    std::locale(std::locale::classic(), new bt::time_input_facet("%Y-%m-%d %H:%M:%S")),
-    std::locale(std::locale::classic(), new bt::time_input_facet("%Y:%m:%d %H:%M:%S")),
-    std::locale(std::locale::classic(), new bt::time_input_facet("%Y-%m-%d-%H:%M:%S")),
-    std::locale(std::locale::classic(), new bt::time_input_facet("%Y-%m-%d-%H.%M.%S")),
-    std::locale(std::locale::classic(), new bt::time_input_facet("%Y-%m-%d_%H:%M:%S")),
-    std::locale(std::locale::classic(), new bt::time_input_facet("%Y-%m-%d_%H.%M.%S")),
-
-
-    std::locale(std::locale::classic(), new bt::time_input_facet("%Y-%m-%d")),
-
- );
-//const size_t formats_n = sizeof(formats)/sizeof(formats[0]);
-
-
-std::time_t pt_to_time_t(const bt::ptime& pt)
-{
-    bt::ptime timet_start(boost::gregorian::date(1970,1,1));
-    bt::time_duration diff = pt - timet_start;
-    return diff.ticks()/bt::time_duration::rep_type::ticks_per_second;
-
-}
-void seconds_from_epoch(const std::string& s)
-{
-    bt::ptime pt;
-    for(size_t i=0; i<formats_n; ++i)
-    {
-        std::istringstream is(s);
-        is.imbue(formats[i]);
-        is >> pt;
-        if(pt != bt::ptime()) break;
+    if(argc <= 1){
+        std::cerr << "Usage: " << argv[0] << " <path_to_photo_directory>" << std::endl;
+        return 1;
     }
-    std::cout << " ptime is " << pt << '\n';
-    std::cout << " seconds from epoch are " << pt_to_time_t(pt) << '\n';
-}
-int main()
-{
-    seconds_from_epoch("2004-03-21 12:45:33");
-    seconds_from_epoch("2004/03/21 12:45:33");
-    seconds_from_epoch("2003-02-11");
-}
-*/
 
+    std::list<boost::filesystem::path> SpecifiedURIs = { argv[1] };
 
-int main(){
-
-    std::list<boost::filesystem::path> SpecifiedURIs = { "/home/hal/Photos/" };
-
+    std::cout << "Considering the following seed URIs:" << std::endl;
+    for(const auto &p : SpecifiedURIs) std::cout << "    " << p.string() << std::endl;
 
     //Verify each path is a reachable file or directory. Discard those that are not.
     {
@@ -109,8 +68,8 @@ int main(){
     {
         for(auto it = SpecifiedURIs.begin(); it != SpecifiedURIs.end(); ++it){
             try{
-                if(boost::filesystem::is_regular_file(*it)
-                && (std::string(boost::filesystem::extension(*it)) == std::string(".jpg"))){
+                if(boost::filesystem::is_regular_file(*it) ){
+                //&& (std::string(boost::filesystem::extension(*it)) == std::string(".jpg"))){
                     if(boost::filesystem::hard_link_count(*it) == 1){
                         EnumeratedFiles.emplace_back(boost::filesystem::canonical(*it));
                     }else{
@@ -131,6 +90,8 @@ int main(){
         EnumeratedFiles.sort();
         EnumeratedFiles.unique();
     }
+    std::cout << "Considering the following files:" << std::endl;
+    for(const auto &p : EnumeratedFiles) std::cout << "    " << p.string() << std::endl;
 
     //Find a timestamp for each file. Attach the data to a ClusteringDatum_t and insert into a tree.
     constexpr size_t MaxElementsInANode = 6; // 16, 32, 128, 256, ... ?
@@ -162,8 +123,8 @@ int main(){
 
     std::cout << "Number of photos being considered: " << BeforeCount << std::endl;
 
-    const size_t MinPts = 4;
-    const double Eps = 5.0; //Seconds.
+    const size_t MinPts = 3;
+    const double Eps = 3600.0 * 12.0; //Seconds.
     
     DBSCAN<RTree_t,CDat_t>(rtree,Eps,MinPts);
 
@@ -204,7 +165,9 @@ int main(){
 
 
     //Write the filenames to 'playlist' files for easy viewing.
-    const std::string base("/tmp/clustered/");
+    const std::string base("/tmp/clusters/");
+    boost::filesystem::create_directories(base);
+
     const auto PredicateSortOnFilename = [](const CDat_t &L, const CDat_t &R) -> bool {
         return (L.UserData < R.UserData);
     };
@@ -212,10 +175,15 @@ int main(){
     for(auto & Cluster : Segregated){
         Cluster.second.sort(PredicateSortOnFilename);
 
-        //std::ofstream FO(base + std::to_string(Cluster.first), std::fstream::app);
-        std::ofstream FO(base + std::to_string(Cluster.first));
+        const std::string cluster_FN = base + std::to_string(Cluster.first);
+        std::cout << "    Writing cluster '" << cluster_FN << "'" << std::endl;
+
+        std::ofstream FO(cluster_FN);
         for(auto & FN : Cluster.second) FO << FN.UserData.native() << std::endl;
+        FO.flush();
+        FO.close();
     }
+    std::cout << "Cluster playlists are in '" << base << "'" << std::endl;
 
     return 0;
 }
