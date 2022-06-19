@@ -36,9 +36,9 @@ directly (all other distributions).
 ## License and Copying
 
 All materials herein which may be copywrited, where applicable, are. Copyright
-2015, 2017, 2018, 2019, 2020, 2021 hal clark. See the LICENSE file for details
-about the license. Informally, YgorClustering is available under a GPLv3+
-license.
+2015, 2017, 2018, 2019, 2020, 2021, 2022 hal clark. See the LICENSE file for
+details about the license. Informally, YgorClustering is available under a
+GPLv3+ license.
 
 All liability is herefore disclaimed. The person(s) who use this source and/or
 software do so strictly under their own volition. They assume all associated
