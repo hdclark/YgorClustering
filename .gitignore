@@ -4,6 +4,7 @@ build
 doctest
 
 *.swp
+example_*
 
 # Compiled Object files
 *.lo

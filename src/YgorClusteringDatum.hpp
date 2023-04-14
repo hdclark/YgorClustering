@@ -84,14 +84,30 @@ class ClusteringDatum {
         UserDataClass UserData;
 
         //Constructors.
-        ClusteringDatum() { };
-        ClusteringDatum(const ClusteringDatum &in) { *this = in; };
-        constexpr ClusteringDatum(const decltype(Coordinates) &in) : Coordinates(in) { };
+        ClusteringDatum() {
+            this->Coordinates.fill( SpatialType() );
+            this->Attributes.fill( AttributeType() );
+            this->CID = ClusterID<ClusterIDType>();
+            this->UserData = UserDataClass();
+        };
+        ClusteringDatum(const ClusteringDatum &in){
+            *this = in;
+        };
+        constexpr ClusteringDatum(const decltype(Coordinates) &in) : Coordinates(in) {
+            this->Attributes.fill( AttributeType() );
+            this->CID = ClusterID<ClusterIDType>();
+            this->UserData = UserDataClass();
+        };
         constexpr ClusteringDatum(const decltype(Coordinates) &a, 
-                                  const decltype(Attributes) &b) : Coordinates(a), Attributes(b) { };
+                                  const decltype(Attributes) &b) : Coordinates(a), Attributes(b) {
+            this->CID = ClusterID<ClusterIDType>();
+            this->UserData = UserDataClass();
+        };
         ClusteringDatum(const decltype(Coordinates) &a,
                         const decltype(Attributes) &b,
-                        const decltype(UserData) &c) : Coordinates(a), Attributes(b), UserData(c) { };
+                        const decltype(UserData) &c) : Coordinates(a), Attributes(b), UserData(c) {
+            this->CID = ClusterID<ClusterIDType>();
+        };
 
         //Member functions.
         ClusteringDatum & operator=(const ClusteringDatum &rhs){
