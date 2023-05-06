@@ -30,7 +30,7 @@ int main(){
 
     size_t FixedSeed = 9137;
     std::mt19937 re(FixedSeed);
-    std::uniform_real_distribution<> rd(0.0, 1000000.0);
+    std::uniform_real_distribution<> rd(0.0, 1'000'000.0);
 
     for(size_t i = 0; i < 1'000'000; ++i){
         rtree.insert(CDat_t({ rd(re) }));

@@ -112,8 +112,8 @@ int main(){
     //Stuff some more points in.
     size_t FixedSeed = 9137;
     std::mt19937 re(FixedSeed);
-    std::uniform_real_distribution<> rd(0.0, 1'000'000.0);
-    for(size_t i = 0; i < 1'000'000; ++i) rtree.insert(CDat_t( { rd(re) }, { }));
+    std::uniform_real_distribution<> rd(0.0, 100'000.0);
+    for(size_t i = 0; i < 100'000; ++i) rtree.insert(CDat_t( { rd(re) }, { }));
 
 
     auto SortedkDistGraphData = DBSCANSortedkDistGraph<RTree_t,CDat_t>(rtree);
