@@ -5,6 +5,7 @@ doctest
 
 *.swp
 example_*
+Visualized.svg
 
 # Compiled Object files
 *.lo
