@@ -91,6 +91,13 @@ class ClusteringDatum {
             this->UserData = UserDataClass();
         };
         ClusteringDatum(const ClusteringDatum &in){
+            // The following superfluous assignments are used to silence spurious 'maybe-uninitialized' warnings.
+            this->Coordinates.fill( SpatialType() );
+            this->Attributes.fill( AttributeType() );
+            this->CID = ClusterID<ClusterIDType>();
+            this->UserData = UserDataClass();
+
+            // Actual assignment happens here.
             *this = in;
         };
         constexpr ClusteringDatum(const decltype(Coordinates) &in) : Coordinates(in) {
