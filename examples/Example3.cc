@@ -23,7 +23,6 @@ int main(){
     typedef boost::geometry::index::rstar<MaxElementsInANode> RTreeParameter_t;
 
     typedef ClusteringDatum<1, double, 0, double, uint32_t, uint32_t> CDat_t;
-    typedef boost::geometry::model::box<CDat_t> Box_t;
     typedef boost::geometry::index::rtree<CDat_t,RTreeParameter_t> RTree_t;
 
     RTree_t rtree;

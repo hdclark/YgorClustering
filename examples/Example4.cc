@@ -100,7 +100,6 @@ int main(int argc, char* argv[]){
     //typedef std::pair<boost::filesystem::path, std::time_t> UserData_t;
     typedef boost::filesystem::path UserData_t;
     typedef ClusteringDatum<1, double, 0, double, uint32_t, UserData_t> CDat_t;
-    typedef boost::geometry::model::box<CDat_t> Box_t;
     typedef boost::geometry::index::rtree<CDat_t,RTreeParameter_t> RTree_t;
 
     RTree_t rtree;

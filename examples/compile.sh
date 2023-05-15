@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-CXXFLAGS+=" -std=c++17 -O1 -g"
-CXXFLAGS+=" -Wall -Wextra -Wpedantic -Warray-bounds"
+CXXFLAGS+=" -std=c++17 -O3 -g"
+CXXFLAGS+=" -Wall -Wextra -Wpedantic -Warray-bounds -Wmaybe-uninitialized"
 CXXFLAGS+=" -fsanitize=address -fsanitize=undefined"
 
 g++ ${CXXFLAGS} Example1.cc -o example_1
