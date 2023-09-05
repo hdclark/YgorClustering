@@ -35,6 +35,7 @@
 #include <string>
 #include <complex>
 #include <set>
+#include <list>
 #include <random>
 #include <sstream>
 
