@@ -10,6 +10,10 @@ target_include_directories(ygorclustering
               $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
+target_link_libraries(ygorclustering
+    INTERFACE Threads::Threads
+)
+
 install(TARGETS ygorclustering
         EXPORT YgorClusteringTargets
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}

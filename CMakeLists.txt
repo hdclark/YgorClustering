@@ -2,6 +2,8 @@
 cmake_minimum_required (VERSION 3.12.0 FATAL_ERROR)
 project (YgorClustering LANGUAGES CXX)
 
+set(YGORCLUSTERING_VERSION "0.0.1")
+
 ####################################################################################
 #                                  Dependencies
 ####################################################################################
@@ -96,7 +98,7 @@ configure_package_config_file(
 
 write_basic_package_version_file(
     "${CMAKE_CURRENT_BINARY_DIR}/YgorClusteringConfigVersion.cmake"
-    VERSION ${PROJECT_VERSION}
+    VERSION ${YGORCLUSTERING_VERSION}
     COMPATIBILITY AnyNewerVersion
 )
 
@@ -115,7 +117,7 @@ set(CPACK_GENERATOR "DEB")
 #SET(CPACK_PACKAGE_NAME "ygorclustering")
 
 STRING(TIMESTAMP INVOCATION_TIMESTAMP "%Y%m%d.%H%M%S") # For a time-based version number.
-SET(CPACK_PACKAGE_VERSION "${INVOCATION_TIMESTAMP}")
+SET(CPACK_PACKAGE_VERSION "${YGORCLUSTERING_VERSION}")
 
 #SET(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "amd64") # i386, amd64, armel, armhf, ...
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "C++ header-only library for data clustering.")
