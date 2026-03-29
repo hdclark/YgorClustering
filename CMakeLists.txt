@@ -1,6 +1,6 @@
 
 cmake_minimum_required (VERSION 3.12.0 FATAL_ERROR)
-project (YgorClustering VERSION 0.0.1 LANGUAGES CXX)
+project (YgorClustering LANGUAGES CXX)
 
 ####################################################################################
 #                                  Dependencies
