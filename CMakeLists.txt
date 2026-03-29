@@ -1,6 +1,6 @@
 
 cmake_minimum_required (VERSION 3.12.0 FATAL_ERROR)
-project (YgorClustering LANGUAGES CXX)
+project (YgorClustering VERSION 0.0.1 LANGUAGES CXX)
 
 ####################################################################################
 #                                  Dependencies
@@ -72,6 +72,39 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_BINDIR})
 
 add_subdirectory(src)
 add_subdirectory(examples)
+
+
+####################################################################################
+#                              Package Configuration
+####################################################################################
+
+include(CMakePackageConfigHelpers)
+
+set(YGORCLUSTERING_CONFIG_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}/cmake/YgorClustering")
+
+install(EXPORT YgorClusteringTargets
+        FILE YgorClusteringTargets.cmake
+        NAMESPACE YgorClustering::
+        DESTINATION "${YGORCLUSTERING_CONFIG_INSTALL_DIR}"
+)
+
+configure_package_config_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/YgorClusteringConfig.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/YgorClusteringConfig.cmake"
+    INSTALL_DESTINATION "${YGORCLUSTERING_CONFIG_INSTALL_DIR}"
+)
+
+write_basic_package_version_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/YgorClusteringConfigVersion.cmake"
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY AnyNewerVersion
+)
+
+install(FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/YgorClusteringConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/YgorClusteringConfigVersion.cmake"
+    DESTINATION "${YGORCLUSTERING_CONFIG_INSTALL_DIR}"
+)
 
 
 ####################################################################################

@@ -6,10 +6,12 @@ add_library(ygorclustering
 )    
 
 target_include_directories(ygorclustering 
-    INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
+    INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+              $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
 install(TARGETS ygorclustering
+        EXPORT YgorClusteringTargets
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
