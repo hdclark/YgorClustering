@@ -1,6 +1,8 @@
 
 cmake_minimum_required (VERSION 3.12.0 FATAL_ERROR)
-project (YgorClustering LANGUAGES CXX)
+
+STRING(TIMESTAMP INVOCATION_TIMESTAMP "%Y%m%d.%H%M%S") # For a time-based version number.
+project(YgorClustering VERSION ${INVOCATION_TIMESTAMP} LANGUAGES CXX)
 
 ####################################################################################
 #                                  Dependencies
@@ -75,14 +77,44 @@ add_subdirectory(examples)
 
 
 ####################################################################################
+#                              Package Configuration
+####################################################################################
+
+include(CMakePackageConfigHelpers)
+
+set(YGORCLUSTERING_CONFIG_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}/cmake/YgorClustering")
+
+configure_package_config_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/YgorClusteringConfig.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/YgorClusteringConfig.cmake"
+    INSTALL_DESTINATION "${YGORCLUSTERING_CONFIG_INSTALL_DIR}"
+)
+
+write_basic_package_version_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/YgorClusteringConfigVersion.cmake"
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY AnyNewerVersion
+)
+
+install(EXPORT YgorClusteringTargets
+        FILE YgorClusteringTargets.cmake
+        NAMESPACE YgorClustering::
+        DESTINATION "${YGORCLUSTERING_CONFIG_INSTALL_DIR}"
+)
+
+install(FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/YgorClusteringConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/YgorClusteringConfigVersion.cmake"
+    DESTINATION "${YGORCLUSTERING_CONFIG_INSTALL_DIR}"
+)
+
+
+####################################################################################
 #                                    Packaging
 ####################################################################################
 
 set(CPACK_GENERATOR "DEB")
 #SET(CPACK_PACKAGE_NAME "ygorclustering")
-
-STRING(TIMESTAMP INVOCATION_TIMESTAMP "%Y%m%d.%H%M%S") # For a time-based version number.
-SET(CPACK_PACKAGE_VERSION "${INVOCATION_TIMESTAMP}")
 
 #SET(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "amd64") # i386, amd64, armel, armhf, ...
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "C++ header-only library for data clustering.")
